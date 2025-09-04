@@ -1,16 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+const User = require('./models/User');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Temporary "database"
-const users = [];
+const SECRET_KEY = "MY_SECRET_KEY"; // keep in env variable in production
 
-const SECRET_KEY = "MY_SECRET_KEY"; // change this in production
+// ✅ Connect MongoDB
+mongoose.connect("mongodb+srv://mithileshbhumca_db_user:Q4FBEl9eI41YHfFn@mycluster.bzojmqw.mongodb.net/?retryWrites=true&w=majority&appName=MyCluster",
+  { useNewUrlParser: true, useUnifiedTopology: true }
+).then(() => console.log("✅ MongoDB Connected"))
+ .catch(err => console.error(err));
 
 // ✅ Middleware to verify JWT
 function authenticateToken(req, res, next) {
@@ -26,44 +33,55 @@ function authenticateToken(req, res, next) {
   });
 }
 
-
 // ✅ Test API
 app.get('/hello', (req, res) => {
-  res.json({ message: 'Hello from API!' });
+  res.json({ message: 'Hello from API with MongoDB & JWT!' });
 });
 
 // ✅ Signup API
-app.post('/signup', (req, res) => {
-  const { name, email, password } = req.body;
+app.post('/signup', async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
 
-  if (users.find(u => u.email === email)) {
-    return res.status(400).json({ error: "User already exists" });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ error: "User already exists" });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save();
+
+    res.json({ success: true, message: "User registered successfully!" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  users.push({ name, email, password });
-  res.json({ success: true, message: "User registered successfully!" });
 });
 
 // ✅ Login API
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  const user = users.find(u => u.email === email && u.password === password);
-  if (!user) {
-    return res.status(401).json({ success: false, message: "Invalid credentials" });
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ success: false, message: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ success: false, message: "Invalid credentials" });
+
+    const token = jwt.sign({ email: user.email, id: user._id }, SECRET_KEY, { expiresIn: "1h" });
+
+    res.json({ success: true, message: "Login successful!", token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  const token = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: "1h" });
-
-  res.json({ success: true, message: "Login successful!", token});
 });
 
-// ✅ Fetch Users API
-app.get('/users', authenticateToken, (req, res) => {
+// ✅ Protected Users API
+app.get('/users', authenticateToken, async (req, res) => {
+  const users = await User.find({}, { password: 0 }); // hide password
   res.json(users);
 });
 
 // ✅ Render requires dynamic port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
-
-// app.listen(3000, () => console.log('🚀 API running on http://localhost:3000'));
