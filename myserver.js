@@ -1,3 +1,5 @@
+require('dotenv').config(); // load env variables at top
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -11,10 +13,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const SECRET_KEY = "MY_SECRET_KEY"; // keep in env variable in production
+
+// ✅ Load from .env
+const PORT = process.env.PORT || 3000;
+const SECRET_KEY = process.env.JWT_SECRET;
+const MONGO_URI = process.env.MONGO_URI;
 
 // ✅ Connect MongoDB
-mongoose.connect("mongodb+srv://mithileshbhumca_db_user:Q4FBEl9eI41YHfFn@mycluster.bzojmqw.mongodb.net/?retryWrites=true&w=majority&appName=MyCluster",
+mongoose.connect(MONGO_URI,
   { useNewUrlParser: true, useUnifiedTopology: true }
 ).then(() => console.log("✅ MongoDB Connected"))
  .catch(err => console.error(err));
@@ -83,5 +89,4 @@ app.get('/users', authenticateToken, async (req, res) => {
 });
 
 // ✅ Render requires dynamic port
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
