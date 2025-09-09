@@ -42,9 +42,9 @@ REFRESH_TOKEN_SECRET=your-refresh-secret
    node index.js
 Runs at http://localhost:5000
 
-🔥 API Endpoints
+## 🔥 API Endpoints
 
-Public APIs
+# Public APIs
 
 POST /signup → Register user
 
@@ -52,11 +52,11 @@ POST /login → Get access + refresh token
 
 POST /refresh → Get new access token
 
-Protected APIs
+## Protected APIs
 
 GET /users → List users (requires Authorization: Bearer <token>)
 
-🚀 Future Enhancements
+## 🚀 Future Enhancements
 
 Role-based access (Admin/User)
 
@@ -69,48 +69,42 @@ Deployment to AWS / Render / Heroku
 ## 🔗 API Integration
 
 ### 🔹 Signup
-**Request:**
-```json
-POST /signup
+**Request: POST /signup**
 {
   "username": "kumar",
   "email": "kumar@example.com",
   "password": "mypassword"
 }
-Response:
+**Response:**
 {
   "success": true,
   "message": "User registered successfully"
 }
-🔹 Login
-request:
-
-POST /login
+### 🔹 Login
+**request: POST /login**
 {
   "email": "kumar@example.com",
   "password": "mypassword"
 }
-Response:
+**Response:**
 {
   "success": true,
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
   "refreshTokenExpiry": 1748802362000
 }
-🔹 Refresh Access Token
-request:
-POST /refresh
+### 🔹 Refresh Access Token
+**request: POST /refresh**
 {
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 }
-Response:
+**Response:**
 {
   "success": true,
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 }
-🔹 Protected API Example:
-request:
-GET /users
+**🔹 Protected API Example:**
+**request:GET /users**
 Authorization: Bearer <accessToken>
 Response:
 [
