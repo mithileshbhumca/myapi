@@ -65,3 +65,59 @@ Password reset with email OTP
 Secure refresh tokens using HttpOnly cookies
 
 Deployment to AWS / Render / Heroku
+
+## 🔗 API Integration
+
+### 🔹 Signup
+**Request:**
+```json
+POST /signup
+{
+  "username": "kumar",
+  "email": "kumar@example.com",
+  "password": "mypassword"
+}
+Response:
+{
+  "success": true,
+  "message": "User registered successfully"
+}
+🔹 Login
+request:
+
+POST /login
+{
+  "email": "kumar@example.com",
+  "password": "mypassword"
+}
+Response:
+{
+  "success": true,
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
+  "refreshTokenExpiry": 1748802362000
+}
+🔹 Refresh Access Token
+request:
+POST /refresh
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+}
+Response:
+{
+  "success": true,
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+}
+🔹 Protected API Example:
+request:
+GET /users
+Authorization: Bearer <accessToken>
+Response:
+[
+  {
+    "_id": "663a1f3c8c11b5...",
+    "username": "kumar",
+    "email": "kumar@example.com"
+  }
+]
+
