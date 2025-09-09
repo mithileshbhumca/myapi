@@ -69,8 +69,8 @@ Deployment to AWS / Render / Heroku
 ## 🔗 API Integration
 
 ### 🔹 Signup
-**Request: POST /signup**
-
+**Request:**
+ POST /signup
 {
   "username": "kumar",
   "email": "kumar@example.com",
