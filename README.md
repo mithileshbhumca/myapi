@@ -77,14 +77,16 @@ Deployment to AWS / Render / Heroku
   "email": "kumar@example.com",
   "password": "mypassword"
 }
-json```
 
 **Response:**
 {
   "success": true,
   "message": "User registered successfully"
 }
+
 ### 🔹 Login
+```json
+
 **request: POST /login**
 {
   "email": "kumar@example.com",
