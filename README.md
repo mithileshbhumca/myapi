@@ -70,6 +70,7 @@ Deployment to AWS / Render / Heroku
 
 ### 🔹 Signup
 **Request: POST /signup**
+
 {
   "username": "kumar",
   "email": "kumar@example.com",
