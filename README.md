@@ -70,12 +70,14 @@ Deployment to AWS / Render / Heroku
 
 ### 🔹 Signup
 **Request:**
+```json
  POST /signup
 {
   "username": "kumar",
   "email": "kumar@example.com",
   "password": "mypassword"
 }
+
 **Response:**
 {
   "success": true,
