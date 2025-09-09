@@ -85,7 +85,6 @@ Deployment to AWS / Render / Heroku
 }
 
 ### 🔹 Login
-```json
 
 **request: POST /login**
 {
