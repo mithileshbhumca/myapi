@@ -77,6 +77,7 @@ Deployment to AWS / Render / Heroku
   "email": "kumar@example.com",
   "password": "mypassword"
 }
+json```
 
 **Response:**
 {
